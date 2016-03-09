@@ -9,7 +9,12 @@
     <legend>
       Register
     </legend>
-      <form class="form-horizontal" method="POST" action="/login">
+    {% if message %}
+      <div class="alert alert-{{ message.status }}">
+        {{ message.value }}
+      </div>
+    {% endif %}
+      <form class="form-horizontal" method="POST" action="/register">
         <input type="email" class="form-control" placeholder="Email Address" name="username" required />
         <input type="password" class="form-control" placeholder="Password" name="password" required />
         <button type="submit" class="btn btn-success">Submit</button>

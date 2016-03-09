@@ -5,22 +5,25 @@ function Users () {
   return knex('users');
 }
 
+
 passport.use(new LocalStrategy({
-  usernameField: 'username'
-},
-  function(username, password, done) {
-    Users().where('username', username).then(function(data) {
+    usernameField: 'email'
+  },
+  function(email, password, done) {
+    Users().where('email', email).then(function(data) {
+      console.log(data);
       if (!data.length) {
-        return done(null, 'Incorrect email');
+        return done('Incorrect email');
       }
       var user = data[0];
+      console.log('user:', user);
         if (user.password === password) {
-          return done(null, data);
+          return done(null, user);
         } else {
-          return done(null, 'Incorrect password');
+          return done('Incorrect password');
         }
     }).catch(function(err) {
-      return done(null, 'Incorrect email and/or password');
+      return done('Incorrect email and/or password');
     });
   }
 ));
@@ -39,5 +42,6 @@ passport.deserializeUser(function(id, done) {
     return done(err);
   });
 });
+
 
 module.exports = passport;
