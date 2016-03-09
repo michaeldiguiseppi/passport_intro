@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var knex = require('../../../db/knex');
+var passport = require('../lib/auth.js');
 function Users () {
   return knex('users');
 }
