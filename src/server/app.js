@@ -9,6 +9,7 @@ var session = require('express-session');
 var swig = require('swig');
 var passport = require('./lib/auth');
 var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
 
 // *** routes *** //
 var routes = require('./routes/index.js');
@@ -38,6 +39,12 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+app.use(flash());
+app.use(function(req, res, next){
+  res.locals.success = req.flash('success');
+  res.locals.danger = req.flash('danger');
+  next();
+});
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, '../client')));
