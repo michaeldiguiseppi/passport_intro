@@ -2,17 +2,18 @@ var express = require('express');
 var router = express.Router();
 var knex = require('../../../db/knex');
 var passport = require('../lib/auth.js');
+var helpers = require('../lib/helpers.js');
 function Users () {
   return knex('users');
 }
 
-router.get('/', function(req, res, next) {
+router.get('/', helpers.ensureAuthenticated, function(req, res, next) {
   var message = req.flash('message')[0];
   console.log(req.user);
   res.render('index', { title: 'Welcome', message: message, user: req.user});
 });
 
-router.get('/login', function(req, res, next) {
+router.get('/login', helpers.loginRedirect, function(req, res, next) {
   res.render('login');
 });
 
@@ -32,13 +33,13 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-router.get('/logout', function(req, res, next) {
+router.get('/logout', helpers.ensureAuthenticated, function(req, res, next) {
   req.logout();
   req.flash('message', {status: 'success', value:'Successfully logged out.'});
   res.redirect('/');
 });
 
-router.get('/register', function(req, res, next) {
+router.get('/register', helpers.loginRedirect, function(req, res, next) {
   var message = req.flash('message')[0];
   res.render('register', {message: message});
 });
@@ -54,15 +55,17 @@ router.post('/register', function(req, res, next) {
       });
       res.redirect('/register');
     } else {
+      // hash and salt the password
+      var hashedPassword = helpers.hashing(password);
       Users().insert({
-        email: username,
-        password: password
+          email: username,
+          password: hashedPassword
       }).then(function() {
           req.flash('message', {status: 'success', value: 'Successfully Registered.'});
           res.redirect('/login');
       });
-    }
-  });
+      }
+    });
 });
 
 module.exports = router;

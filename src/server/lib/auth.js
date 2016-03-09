@@ -1,6 +1,7 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var knex = require('../../../db/knex');
+var helpers = require('./helpers');
 function Users () {
   return knex('users');
 }
@@ -17,7 +18,7 @@ passport.use(new LocalStrategy({
       }
       var user = data[0];
       console.log('user:', user);
-        if (user.password === password) {
+      if (helpers.comparePassword(password, user.password)) {
           return done(null, user);
         } else {
           return done('Incorrect password');
