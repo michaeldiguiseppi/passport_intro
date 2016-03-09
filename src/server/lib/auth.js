@@ -10,13 +10,17 @@ passport.use(new LocalStrategy({
 },
   function(username, password, done) {
     Users().where('username', username).then(function(data) {
-      if (data) {
-        if (data[0].password === password) {
+      if (!data.length) {
+        return done(null, 'Incorrect email');
+      }
+      var user = data[0];
+        if (user.password === password) {
           return done(null, data);
         } else {
-          return done(null, false);
+          return done(null, 'Incorrect password');
         }
-      }
+    }).catch(function(err) {
+      return done(null, 'Incorrect email and/or password');
     });
   }
 ));
@@ -30,7 +34,9 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(id, done) {
   // find user and return by id
   Users().where('id', id).then(function(data) {
-    return data;
+    return done(null, data[0]);
+  }).catch(function(err) {
+    return done(err);
   });
 });
 

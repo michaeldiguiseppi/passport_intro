@@ -14,10 +14,8 @@ router.get('/login', function(req, res, next) {
   res.render('login');
 });
 
-router.post('/login', function(req, res, next) {
-  var username = req.body.username;
-  var password = req.body.password;
-  res.json({username: username, password: password});
+router.post('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login'}), function(req, res, next) {
+  res.send('Success');
 });
 
 router.get('/logout', function(req, res, next) {
@@ -31,7 +29,10 @@ router.get('/register', function(req, res, next) {
 router.post('/register', function(req, res, next) {
   var username = req.body.username;
   var password = req.body.password;
-  res.json({username: username, password: password});
+  Users().insert({
+    username: username,
+    password: password
+  });
 });
 
 module.exports = router;
