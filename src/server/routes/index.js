@@ -8,13 +8,14 @@ function Users () {
 }
 
 router.get('/', helpers.ensureAuthenticated, function(req, res, next) {
-  var message = req.flash('message')[0];
+  var message = req.flash('message');
   console.log(req.user);
-  res.render('index', { title: 'Welcome', message: message, user: req.user});
+  res.render('index', { title: 'Welcome', messages: message, user: req.user});
 });
 
 router.get('/login', helpers.loginRedirect, function(req, res, next) {
-  res.render('login');
+  var message = req.flash('message');
+  res.render('login', {messages: message});
 });
 
 router.post('/login', function(req, res, next) {
@@ -40,8 +41,8 @@ router.get('/logout', helpers.ensureAuthenticated, function(req, res, next) {
 });
 
 router.get('/register', helpers.loginRedirect, function(req, res, next) {
-  var message = req.flash('message')[0];
-  res.render('register', {message: message});
+  var message = req.flash('message');
+  res.render('register', {messages: message});
 });
 
 router.post('/register', function(req, res, next) {

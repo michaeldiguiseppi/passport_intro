@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="/css/main.css">
   </head>
   <body>
+    {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.status }}">
+        {{ message.value }}
+      </div>
+    {% endfor %}
+    {% endif %}
     {% block content %}
     {% endblock %}
     <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>

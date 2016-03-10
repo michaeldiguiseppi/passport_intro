@@ -8,11 +8,7 @@
   <div class="container">
 
     <h1>{{ title }} {{ user.email }}</h1>
-    {% if message %}
-      <div class="alert alert-{{ message.status }}">
-        {{ message.value }}
-      </div>
-    {% endif %}
+    
     {% if !user %}
     <a href="/login" class="btn btn-info">Log In</a>
     <a href="/register" class="btn btn-primary">Register</a>
